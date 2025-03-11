@@ -43,10 +43,10 @@ type IsUniqueInterface = {
 
 export function IsUnique(
   options: IsUniqueInterface,
-  prisma: PrismaService,
   validationOptions?: ValidationOptions,
 ) {
   return function (object: any, propertyName: string) {
+    const prisma = new PrismaService();
     registerDecorator({
       name: 'IsUnique',
       target: object.constructor,
