@@ -13,7 +13,6 @@ export class AuthController {
             const user = await this.authService.register(registerDto);
             return responseCreator(200, 'User registered successfully', user);
         } catch (error) {
-            console.log(error.message)
             throw new HttpException(
                 responseCreator(error.response.statusCode || error.status, error.message, null, error.error),
                 error.response.statusCode || error.status || 500
