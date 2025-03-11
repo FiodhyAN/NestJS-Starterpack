@@ -1,15 +1,19 @@
 import { IsEmail, IsNotEmpty, IsStrongPassword, Validate } from "class-validator";
-import { IsEqualTo } from "src/validator/register.validator";
+import { PrismaService } from "src/core/services/prisma.service";
+import { IsEqualTo, IsUnique } from "src/validator/register.decorator";
 
+const prisma = new PrismaService();
 export class RegisterDTO {
     @IsNotEmpty()
     name: string;
 
     @IsNotEmpty()
+    @IsUnique({tableName: 'user', column: 'username'}, prisma)
     username: string;
     
     @IsNotEmpty()
     @IsEmail()
+    @IsUnique({tableName: 'user', column: 'email'}, prisma)
     email: string;
 
     @IsNotEmpty()

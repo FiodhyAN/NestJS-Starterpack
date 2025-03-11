@@ -1,8 +1,7 @@
 import { Body, Controller, HttpException, Post } from "@nestjs/common";
 import { AuthService, RegisterResponse } from "./auth.service";
-import { RegisterDTO } from "./DTO/register.dto";
+import { RegisterDTO } from "../../DTO/register.dto";
 import { ApiResponse, responseCreator } from "src/utils/helper.util";
-// import { User } from "@prisma/client";
 
 @Controller('auth')
 export class AuthController {
@@ -14,9 +13,10 @@ export class AuthController {
             const user = await this.authService.register(registerDto);
             return responseCreator(200, 'User registered successfully', user);
         } catch (error) {
+            console.log(error.message)
             throw new HttpException(
-                responseCreator(error.response.statusCode, error.response.message, null, error.response.error),
-                error.response.statusCode
+                responseCreator(error.response.statusCode || error.status, error.message, null, error.error),
+                error.response.statusCode || error.status || 500
             );
         }
     }
