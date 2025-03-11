@@ -4,7 +4,7 @@ import { User } from '@prisma/client';
 import path from 'path';
 import * as fs from 'fs'
 import { PrismaService } from 'src/core/services/prisma.service';
-import { convertTimezone } from 'src/utils/helper.util';
+import { convertTimezone, decryptData, encryptData } from 'src/utils/helper.util';
 
 @Injectable()
 export class MailService {
@@ -25,7 +25,7 @@ export class MailService {
       //     email_verification_token_expires_at: tokenExpiredAt,
       //   },
       // });
-      const url = `${process.env.FRONTEND_URL}/verify-email?userId=${user.uuid}&token=${token}`;
+      const url = `${process.env.FRONTEND_URL}/verify-email?userId=${encryptData(user.uuid)}&token=${encryptData(token)}`;
       await this.mailerService.sendMail({
         to: user.email,
         subject: 'Welcome to CSWEB! Confirm your Email',

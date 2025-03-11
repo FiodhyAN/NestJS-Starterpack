@@ -1,3 +1,5 @@
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
+
 export interface ApiResponse<T> {
   status: number;
   message: string;
@@ -49,4 +51,26 @@ export function generateRandomString(length: number) {
     }
 
     return result;
+}
+
+export function encryptData(data: string) {
+  const alg = 'aes-256-ctr';
+  let key = process.env.ENCRYPT_KEY;
+  key = createHash('sha256').update(String(key)).digest('base64').substring(0, 32);
+  const iv = randomBytes(16);
+  const cipher = createCipheriv(alg, key, iv);
+  const result = Buffer.concat([iv, cipher.update(data), cipher.final()]);
+  return result.toString('base64');
+}
+
+export function decryptData(encryptedData: string) {
+  const alg = 'aes-256-ctr';
+  let key = process.env.ENCRYPT_KEY;
+  key = createHash('sha256').update(String(key)).digest('base64').substring(0, 32);
+  const data = Buffer.from(encryptedData, 'base64');
+  const iv = data.subarray(0, 16);
+  const encryptedText = data.subarray(16);
+  const decipher = createDecipheriv(alg, key, iv);
+  let decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
+  return decrypted.toString();
 }
