@@ -1,5 +1,4 @@
-import { IsEmail, IsNotEmpty, IsStrongPassword, Validate } from "class-validator";
-import { PrismaService } from "src/core/services/prisma.service";
+import { IsEmail, IsNotEmpty, IsStrongPassword } from "class-validator";
 import { IsEqualTo, IsUnique } from "src/validator/register.decorator";
 
 export class RegisterDTO {

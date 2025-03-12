@@ -53,7 +53,7 @@ export function generateRandomString(length: number) {
     return result;
 }
 
-export function encryptData(data: string) {
+export function encryptData(data: string): string {
   const alg = 'aes-256-ctr';
   let key = process.env.ENCRYPT_KEY;
   key = createHash('sha256').update(String(key)).digest('base64').substring(0, 32);
@@ -63,14 +63,19 @@ export function encryptData(data: string) {
   return result.toString('base64');
 }
 
-export function decryptData(encryptedData: string) {
+export function decryptData(encryptedData: string): string {
   const alg = 'aes-256-ctr';
   let key = process.env.ENCRYPT_KEY;
   key = createHash('sha256').update(String(key)).digest('base64').substring(0, 32);
+
   const data = Buffer.from(encryptedData, 'base64');
-  const iv = data.subarray(0, 16);
+
+  const iv = data.subarray(0, 16)
   const encryptedText = data.subarray(16);
+
   const decipher = createDecipheriv(alg, key, iv);
+
   let decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
+  
   return decrypted.toString();
 }
